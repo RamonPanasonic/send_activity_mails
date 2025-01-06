@@ -23,10 +23,17 @@ class CrmActivityReportScheduler(models.Model):
             body_html = "<h3>CRM Call Activities Report</h3><ul>"
             body_html += ''.join(f"<li>{line}</li>" for line in report_lines)
             body_html += "</ul>" """
+        
+        cantidad_gibran = self.env['crm.activity.report'].search_count(["&", ("mail_activity_type_id", "=", 2), ("user_id", "=", 24)])
+
+        body_html = ""
+
+        if cantidad_gibran:
+            body_html += "<h3>Gibran: " + str(cantidad_gibran) + "</h3><br/>"
 
         mail_values = {
             'subject': 'Reporte de llamadas de vendedores',
-            'body_html': "<h3>CRM Call Activities Report</h3><ul>",
+            'body_html': body_html,
             'email_to': 'ramon@industrialpanasonic.com',
             'email_from': self.env.user.company_id.email or self.env.user.email,
         }
