@@ -6,9 +6,9 @@ class CrmActivityReportScheduler(models.Model):
     _description = 'Scheduled Email for CRM Call Activities'
 
     def send_crm_call_activity_report(self):
-        """Send an email with the count of call activities grouped by salesperson."""
-        today = date.today()
+        """ today = fields.Date.context_today(self)
         domain = [('mail_activity_type_id', '=', 2), ('activity_date', '=', today)]
+        
         activities = self.env['crm.activity.report'].read_group(
             domain=domain,
             fields=['user_id', 'activity_type_id:count(activity_type_id)'],
@@ -17,17 +17,17 @@ class CrmActivityReportScheduler(models.Model):
 
         if activities:
             report_lines = [
-                f"{activity['user_id'][1]}: {activity['activity_type_id_count']}"
+                f"{activity.get('user_id', [''])[1]}: {activity.get('activity_type_id_count', 0)}"
                 for activity in activities
             ]
             body_html = "<h3>CRM Call Activities Report</h3><ul>"
             body_html += ''.join(f"<li>{line}</li>" for line in report_lines)
-            body_html += "</ul>"
+            body_html += "</ul>" """
 
-            mail_values = {
-                'subject': 'Daily CRM Call Activities Report',
-                'body_html': body_html,
-                'email_to': 'ramon@industrialpanasonic.com',  # Cambia al destinatario real
-                'email_from': '{{ (object.company_id.email_formatted or user.email_formatted) }}',
-            }
-            self.env['mail.mail'].create(mail_values).send()
+        mail_values = {
+            'subject': 'Reporte de llamadas de vendedores',
+            'body_html': "<h3>CRM Call Activities Report</h3><ul>",
+            'email_to': 'ramon@industrialpanasonic.com',
+            'email_from': self.env.user.company_id.email or self.env.user.email,
+        }
+        self.env['mail.mail'].create(mail_values).send()

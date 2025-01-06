@@ -1,8 +1,12 @@
 {
-    'name': 'CRM Call Activity Report Scheduler',
+    'name': 'Activity Mail Scheduler',
     'version': '1.0',
-    'depends': ['crm', 'base'],
+    'summary': 'Reporte de llamadas de vendedores',
+    'author': 'Ramón Reyna',
+    'depends': ['crm', 'mail'],
     'data': [
-        'data/ir_cron_data.xml',  # Define la tarea programada
+        'security/ir.model.access.csv',
     ],
+    'installable': True,
+    'application': False,
 }
